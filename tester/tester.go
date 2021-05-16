@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	"path"
+	"sync"
+	"time"
 )
 
 type Interface interface {
@@ -13,17 +15,27 @@ type Interface interface {
 
 func Run(testDir string, task Interface)  {
 	i := 0
+	var wg sync.WaitGroup
 	for {
 		inFile  := path.Join(testDir, fmt.Sprintf("test.%d.in", i))
 		outFile := path.Join(testDir, fmt.Sprintf("test.%d.out", i))
-
 		input, errIn := readFileLineByLine(inFile)
 		output, errOut := readFileLineByLine(outFile)
 		if errIn != nil || errOut != nil {
-			return
+			break
 		}
-		fmt.Println(input, output)
+
+		wg.Add(1)
+		go func(input,  output []string, i int) {
+			intime := time.Now()
+			result := task.Run(input)
+			runtime := time.Now().Sub(intime).Microseconds()
+			fmt.Printf("Test %d: %t [%vμs]\n", i, result == output[0], runtime)
+			wg.Done()
+		}(input, output, i)
+		i++
 	}
+	wg.Wait()
 }
 
 func readFileLineByLine(filePath string) (output []string, err error) {
