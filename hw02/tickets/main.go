@@ -108,8 +108,8 @@ func initSequence() (seq []int64) {
 
 func main()  {
 	fmt.Println("Dinamic counter:")
-	tester.Run("./hw02/tickets/testdata", &Dinamic{})
+	tester.Run("./hw02/tickets/testdata", &Dinamic{}, tester.Option{})
 	fmt.Println("Recursive counter (wait if you want...):")
-	tester.Run("./hw02/tickets/testdata", &RecursiveCounter{})
+	tester.Run("./hw02/tickets/testdata", &RecursiveCounter{}, tester.Option{})
 }
 

@@ -13,6 +13,6 @@ func (e *LengthCounter) Run(input []string) string {
 }
 
 func main()  {
-	tester.Run("./hw02/strings/testdata", &LengthCounter{})
+	tester.Run("./hw02/strings/testdata", &LengthCounter{}, tester.Option{})
 }
 
